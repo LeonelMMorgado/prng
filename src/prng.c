@@ -11,6 +11,24 @@ typedef struct _prng_state {
 	uint64_t s[4];
 } prng_state;
 
+uint64_t _seed_prng(uint64_t seed) {
+	uint64_t result = seed + SEED_CONST;
+	result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9;
+	result = (result ^ (result >> 27)) * 0x94D049BB133111EB;
+	return result ^ (result >> 31);
+}
+
+void prng_init(prng_state *state, uint64_t seed) {
+	uint64_t tmp = _seed_prng(seed);
+	state->s[0] = (uint32_t)tmp;
+	state->s[1] = (uint32_t)(tmp >> 32);
+
+	seed += SEED_CONST;
+	tmp = _seed_prng(seed);
+	state->s[2] = (uint32_t)tmp;
+	state->s[3] = (uint32_t)(tmp >> 32);
+}
+
 uint64_t _rol64(uint64_t x, int k) {
 	return (x << k) | (k >> (64 - k));
 }
@@ -29,23 +47,5 @@ uint64_t prng_gen(prng_state *state) {
 	s[3] = _rol64(s[3], 45);
 
 	return result;
-}
-
-uint64_t _seed_prng(uint64_t seed) {
-	uint64_t result = seed + SEED_CONST;
-	result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9;
-	result = (result ^ (result >> 27)) * 0x94D049BB133111EB;
-	return result ^ (result >> 31);
-}
-
-void prng_init(prng_state *state, uint64_t seed) {
-	uint64_t tmp = _seed_prng(seed);
-	state->s[0] = (uint32_t)tmp;
-	state->s[1] = (uint32_t)(tmp >> 32);
-
-	seed += SEED_CONST;
-	tmp = _seed_prng(seed);
-	state->s[2] = (uint32_t)tmp;
-	state->s[3] = (uint32_t)(tmp >> 32);
 }
 

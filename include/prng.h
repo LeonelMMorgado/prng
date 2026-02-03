@@ -13,8 +13,7 @@ typedef struct _prng_state {
 	uint64_t state_count[4];
 } prng_state;
 
-uint64_t prng_gen(prng_state *state);
-
 void prng_init(prng_state *state, uint64_t seed);
+uint64_t prng_gen(prng_state *state);
 
 #endif
