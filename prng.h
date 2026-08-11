@@ -21,7 +21,10 @@ typedef struct _prng_state {
 void prng_init(Prng_state *state, uint64_t seed);
 uint64_t prng_gen(Prng_state *state);
 
+#endif //PRNG_H
+
 #ifdef PRNG_IMPLEMENTATION
+
 uint64_t _seed_prng(uint64_t *seed) {
 	uint64_t result = (*seed += 0x9E3779B97F4A7C15);
 	result = (result ^ (result >> 30)) * 0xBF58476D1CE4E5B9;
@@ -57,5 +60,3 @@ uint64_t prng_gen(Prng_state *state) {
 }
 
 #endif //PRNG_IMPLEMENTATION
-
-#endif //PRNG_H
